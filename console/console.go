@@ -5,6 +5,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"koshmin/dahua-loader/config"
+	"koshmin/dahua-loader/database"
 	"koshmin/dahua-loader/services"
 )
 
@@ -66,6 +67,39 @@ func main() {
 		Short: "Download videos from dahua cameras",
 	}
 
+	// Migrations
+	migrationCmd := &cobra.Command{
+		Use:   "migrations",
+		Short: "Manage migrations",
+	}
+
+	upCmd := &cobra.Command{
+		Use:   "up",
+		Short: "Run available migrations",
+		Run: func(cmd *cobra.Command, args []string) {
+			database.MigrationsUp()
+
+		},
+	}
+	downCmd := &cobra.Command{
+		Use:   "down",
+		Short: "Rollback one last migration",
+		Run: func(cmd *cobra.Command, args []string) {
+			database.MigrationsDown()
+		},
+	}
+	statusCmd := &cobra.Command{
+		Use:   "status",
+		Short: "Migrations status",
+		Run: func(cmd *cobra.Command, args []string) {
+			database.MigrationsStatus()
+		},
+	}
+
+	// Add subcommands
+	migrationCmd.AddCommand(upCmd, downCmd, statusCmd)
+	rootCmd.AddCommand(migrationCmd)
+
 	// Check new videos/photos
 	checkNewVideos := &cobra.Command{
 		Use:   "download-new-video",
@@ -86,6 +120,15 @@ func main() {
 		printAllCommands(cmd, "")
 	})
 
+	// Override help
+	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
+		fmt.Println("Usage:")
+		fmt.Printf("  %s [command]\n\n", cmd.Use)
+		fmt.Println("Available Commands:")
+		printAllCommands(cmd, "")
+	})
+
 	rootCmd.Root().CompletionOptions.DisableDefaultCmd = true
 	rootCmd.Execute()
+
 }
