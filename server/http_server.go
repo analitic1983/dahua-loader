@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"koshmin/dahua-loader/config"
+	"koshmin/dahua-loader/server/middleware"
 	"koshmin/dahua-loader/server/pages"
 	"log"
 	"net/http"
@@ -16,11 +17,16 @@ func HTTPServerStart(ctx context.Context) {
 	const CLOSE_TIMEOUT = 15 * time.Second
 
 	// Wait for finish signal
-	r := gin.Default()
+	r := gin.New()
+
+	// Middleware
+	r.Use(middleware.Auth())
 
 	// Routes
 	r.GET("/", pages.Index)
 	r.GET("/ping", pages.Ping)
+	r.POST("/auth", pages.Auth)
+	r.GET("/camera/list", pages.CameraList)
 
 	// Start on port 8080
 	listenOn := config.AppConfig.HttpServer.Host + ":" + config.AppConfig.HttpServer.Port

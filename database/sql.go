@@ -9,11 +9,17 @@ import (
 	"log"
 )
 
-var DB *sql.DB
-var GormDB *gorm.DB
+var DB *sql.DB = nil
+var GormDB *gorm.DB = nil
 
-// InitSQL db connection
-func InitSQL() error {
+// InitDB connection
+func InitDB() error {
+
+	if DB != nil {
+		// Already initialized
+		return nil
+	}
+
 	var err error
 	dsn := config.AppConfig.Mysql.User + ":" + config.AppConfig.Mysql.Pass + "@tcp(" + config.AppConfig.Mysql.Host + ":" + config.AppConfig.Mysql.Port + ")/" + config.AppConfig.Mysql.Dbname + "?parseTime=true"
 	DB, err = sql.Open("mysql", dsn)
@@ -28,7 +34,7 @@ func InitSQL() error {
 		return err
 	}
 
-	// InitSQL gorm
+	// InitDB gorm
 	GormDB, err = gorm.Open(mysql.New(mysql.Config{
 		Conn: DB,
 	}), &gorm.Config{})

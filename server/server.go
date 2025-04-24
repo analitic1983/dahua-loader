@@ -16,8 +16,8 @@ import (
 func main() {
 	config.Init()
 
-	// InitSQL database
-	if err := database.InitSQL(); err != nil {
+	// InitDB database
+	if err := database.InitDB(); err != nil {
 		log.Fatal("Failed db connect: ", err)
 		panic(err.Error())
 	}

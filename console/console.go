@@ -7,6 +7,7 @@ import (
 	"koshmin/dahua-loader/config"
 	"koshmin/dahua-loader/database"
 	"koshmin/dahua-loader/services"
+	"log"
 )
 
 // Show all commands
@@ -108,17 +109,38 @@ func main() {
 			_ = services.CheckForNewVideos()
 		},
 	}
-
-	// Add subcommands
 	rootCmd.AddCommand(checkNewVideos)
 
-	// Override help
-	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {
-		fmt.Println("Usage:")
-		fmt.Printf("  %s [command]\n\n", cmd.Use)
-		fmt.Println("Available Commands:")
-		printAllCommands(cmd, "")
-	})
+	// Create admin
+	createAdmin := &cobra.Command{
+		Use:   "create-admin",
+		Short: "has two parameters: email, password",
+		Run: func(cmd *cobra.Command, args []string) {
+			email, _ := cmd.Flags().GetString("email")
+			password, _ := cmd.Flags().GetString("password")
+			if email == "" {
+				log.Fatalln("Empty \"email\" parameter not allowed")
+				return
+			}
+			if password == "" {
+				log.Fatalln("Empty \"password\" parameter not allowed")
+				return
+			}
+
+			if err := database.InitDB(); err != nil {
+				log.Fatalln("Failed db connect: ", err)
+			}
+
+			_, err := services.AddAdmin(email, password)
+			if err != nil {
+				log.Fatalln("Failed create user:", err.Error())
+			}
+			log.Println("User created.")
+		},
+	}
+	createAdmin.Flags().StringP("email", "", "", "Email address")
+	createAdmin.Flags().StringP("password", "", "", "Password")
+	rootCmd.AddCommand(createAdmin)
 
 	// Override help
 	rootCmd.SetHelpFunc(func(cmd *cobra.Command, args []string) {

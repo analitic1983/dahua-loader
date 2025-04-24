@@ -19,8 +19,7 @@ CREATE TABLE users (
   pass_hash varchar(520) DEFAULT NULL,
   created_at datetime NOT NULL,
   status enum('active', 'inactive') NOT NULL,
-  PRIMARY KEY (uuid),
-  UNIQUE KEY email (email)
+  PRIMARY KEY (uuid)
 ) ENGINE=InnoDB;
 	`)
 	return err
