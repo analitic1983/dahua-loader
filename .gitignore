@@ -1,4 +1,5 @@
 .idea
+.env
 dahua_log.txt
 /converted/
 /download/
