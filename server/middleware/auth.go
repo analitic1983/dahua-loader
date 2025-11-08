@@ -22,10 +22,11 @@ func Auth() gin.HandlerFunc {
 		if token == "" {
 			c.JSON(401, gin.H{
 				"success": false,
-				"error":   "No \"Authorization\" header specified",
+				"message": "No \"Authorization\" header specified",
 			})
 			time.Sleep(500 * time.Millisecond)
 			c.Abort()
+			return
 		}
 		// Cat "Bearer " prefix
 		token = strings.TrimPrefix(token, "Bearer ")

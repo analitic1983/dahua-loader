@@ -26,7 +26,10 @@ func HTTPServerStart(ctx context.Context) {
 	r.GET("/", pages.Index)
 	r.GET("/ping", pages.Ping)
 	r.POST("/auth", pages.Auth)
+	r.GET("/check-token", pages.CheckToken)
 	r.GET("/camera/list", pages.CameraList)
+	r.GET("/user/list", pages.UserList)
+	r.GET("/user/get", pages.UserGet)
 
 	// Start on port 8080
 	listenOn := config.AppConfig.HttpServer.Host + ":" + config.AppConfig.HttpServer.Port

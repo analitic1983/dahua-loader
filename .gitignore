@@ -5,3 +5,5 @@ dahua_log.txt
 /download/
 /dahua-loader-console
 /dahua-loader-server
+/1.sh
+/.tabby/config.toml

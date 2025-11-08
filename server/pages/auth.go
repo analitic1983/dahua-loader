@@ -16,7 +16,7 @@ func Auth(c *gin.Context) {
 	var jsonData map[string]interface{}
 
 	if err := c.BindJSON(&jsonData); err != nil {
-		c.JSON(400, gin.H{"error": "Invalid JSON"})
+		c.JSON(400, gin.H{"message": "Invalid JSON"})
 		return
 	}
 
@@ -50,7 +50,7 @@ func Auth(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"success": false,
+		"success": true,
 		"message": "Successfully logged in",
 		"token":   token,
 	})
